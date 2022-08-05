@@ -1,6 +1,5 @@
 /* Set elements to border-box to make it easier to layout */
-*::before,
-*::after {
+* {
   box-sizing: border-box;
 }
 
@@ -45,13 +44,26 @@ header nav {
 }
 
 header nav .header-title {
-  padding-left: 8px;
+  padding-left: 16px;
 }
 
 header nav a {
   color: white;
   text-decoration: none;
   margin: 0 12px;
+  transition: all 0.3s;
+}
+
+header nav a:hover {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+main {
+  padding: 16px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 footer {
@@ -76,6 +88,94 @@ footer {
 }
 
 div.discount-code {
-  border: 1px solid grey;
+  border: 1px solid #d5d5d5;
   padding: 8px;
+  max-width: 300px;
+  float: right;
+}
+
+div.discount-code label {
+  font-weight: bold;
+}
+
+div.discount-code .button {
+  margin-top: 8px;
+}
+
+table {
+  display: grid;
+  border-collapse: collapse;
+  min-width: 100%;
+  overflow: auto;
+}
+
+table.cart {
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+}
+
+table.cart tr th:last-of-type,
+table.cart tr td:last-of-type {
+  text-align: right;
+}
+
+table.admin {
+  grid-template-columns: repeat(7, minmax(150px, 1fr));
+}
+
+table.totals {
+  text-align: right;
+  grid-template-columns: repeat(2, minmax(50px, 150px));
+  justify-content: right;
+  font-size: 1.35rem;
+}
+
+table.totals tr td:first-of-type {
+  font-weight: bold;
+}
+
+thead,
+tbody,
+tr {
+  display: contents;
+}
+
+th,
+td {
+  padding: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  background-color: var(--footer-bg-color);
+  color: var(--header-font-color);
+  text-align: left;
+}
+
+th:last-child {
+  border: 0;
+}
+
+td {
+  padding: 10px 14px;
+  color: #222222;
+}
+
+tr:nth-child(even) td {
+  background-color: #efefef;
+}
+
+.actions {
+  margin-bottom: 16px;
+}
+
+.action {
+  display: inline-block;
+}
+
+.action.delete {
+  background-color: red;
 }

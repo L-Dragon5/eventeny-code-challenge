@@ -1,5 +1,15 @@
 <?php
 session_start();
+require_once('php/Database.php');
+require_once('php/Cart.php');
+
+$db = new Database();
+$cart = new Cart();
+
+if (!isset($_SESSION['cart_amount'])) {
+  $_SESSION['cart_amount'] = 165.00;
+}
+$cart->subtotal($_SESSION['cart_amount']);
 
 ?>
 
@@ -29,35 +39,46 @@ session_start();
     </header>
 
     <main>
-      <table>
+      <table class="cart">
         <thead>
           <tr>
-            <td>Product</td>
-            <td>Price</td>
-            <td>Quantity</td>
-            <td>Total</td>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
           </tr>
         </thead>
         <tbody>
-
+          <tr>
+            <td>Initial Interview</td>
+            <td>&dollar;100.00</td>
+            <td>1</td>
+            <td>&dollar;100.00</td>
+          </tr>
+          <tr>
+            <td>Interview Challenge</td>
+            <td>&dollar;65.00</td>
+            <td>1</td>
+            <td>&dollar;65.00</td>
+          </tr>
         </tbody>
       </table>
 
-      <table>
+      <table class="totals">
         <tbody>
-          <?php if (isset($discountCode)): ?>
+          <?php if (isset($cart->discount)): ?>
           <tr>
             <td>Subtotal</td>
-            <td>&dollar;</td>
+            <td>&dollar;<?php echo number_format($cart->subtotal(), 2); ?></td>
           </tr>
           <tr>
             <td>Discount</td>
-            <td>&dollar;</td>
+            <td>&dollar;<?php echo number_format($cart->discount(), 2); ?></td>
           </tr>
           <?php endif; ?>
           <tr>
             <td>Total</td>
-            <td>&dollar;</td>
+            <td>&dollar;<?php echo number_format($cart->total(), 2); ?></td>
           </tr>
         </tbody>
       </table>
@@ -66,10 +87,6 @@ session_start();
         <label for="discount-code-input">Discount Code</label>
         <input type="text" id="discount-code-input" />
         <input type="submit" value="Apply Code" class="button" />
-      </div>
-
-      <div class="actions">
-        <input type="submit" value="Submit Order" class="button" />
       </div>
     </main>
 
