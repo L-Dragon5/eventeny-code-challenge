@@ -11,7 +11,12 @@ if (isset($_POST['action'])) {
     } else if ($action === 'ADD') {
 
     } else if ($action === 'EDIT') {
-
+        if (isset($_POST['id'])) {
+            $id = htmlspecialchars($_POST['id']);
+            
+        } else {
+            echo 'ID not supplied.';
+        }
     } else if ($action === 'REMOVE') {
         if (isset($_POST['id'])) {
             $id = htmlspecialchars($_POST['id']);

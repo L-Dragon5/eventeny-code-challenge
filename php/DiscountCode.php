@@ -68,6 +68,31 @@ class DiscountCode
     }
 
     /**
+     * Add new discount code.
+     * 
+     * @param Database  $db     Database object
+     * @param array     $dc     fields of object to add
+     * 
+     * @return bool     Whether added successfully
+     */
+    public static function add(Database $db, $dc) {
+        //TODO
+    }
+
+    /**
+     * Edit discount code based on id.
+     * 
+     * @param Database  $db     Database object
+     * @param int       $id     id of discount code
+     * @param array     $dc     fields to edit on object
+     * 
+     * @return bool     Whether updated successfully
+     */
+    public static function edit(Database $db, $id, $dc) {
+        //TODO
+    }
+
+    /**
      * Remove discount code based on id.
      * Sets status to 0.
      * 
