@@ -52,7 +52,7 @@ if (isset($_POST['discount-code'])) {
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
-    <script src="cart.js" defer></script>
+    <script src="js/cart.js" defer></script>
   </head>
   <body>
 	  <header>

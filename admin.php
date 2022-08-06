@@ -10,7 +10,7 @@
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
-    <script src="admin.js" defer></script>
+    <script src="js/admin.js" defer></script>
   </head>
   <body>
     <header class="admin">
