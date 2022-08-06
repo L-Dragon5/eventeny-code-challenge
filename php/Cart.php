@@ -72,11 +72,13 @@ class Cart
     }
 
     private function calculate() {
-        // Get values based on discount type.
-        if ($this->discount->type === 'P') {
-            $this->discountValue = ($this->discount->amount / 100) * $this->subtotal;
-        } else if ($this->discount->type === 'F') {
-            $this->discountValue = $this->discount->amount;
+        if (!empty($this->discount)) {
+            // Get values based on discount type.
+            if ($this->discount->type === 'P') {
+                $this->discountValue = ($this->discount->amount / 100) * $this->subtotal;
+            } else if ($this->discount->type === 'F') {
+                $this->discountValue = $this->discount->amount;
+            }
         }
     }
 }

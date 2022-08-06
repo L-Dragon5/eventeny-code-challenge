@@ -30,11 +30,25 @@ if (isset($_POST['discount-code'])) {
     $errors = true;
     $error = "Code '" . $discountCodeValue . "' does not exist.";
   } else {
-    $success = true;
-    $successMessage = "Code '" . $discountCodeValue . "' has been applied.";
-    $_SESSION['discount-code'] = serialize($discountCode);
-
-    $cart->discount($discountCode);
+    // If in valid datetime, then keep going.
+    // If not, then code is not in active use.
+    if (DiscountCode::checkDate($db, $discountCode->id)) {
+      // If can use one, then keep going.
+      // If not, then maximum number of uses are used.
+      if (DiscountCode::useOne($db, $discountCode->id)) {
+        $success = true;
+        $successMessage = "Code '" . $discountCodeValue . "' has been applied.";
+        $_SESSION['discount-code'] = serialize($discountCode);
+    
+        $cart->discount($discountCode);
+      } else {
+        $errors = true;
+        $error = "Code '" . $discountCodeValue . "' has been fully used up.";
+      }
+    } else {
+      $errors = true;
+      $error = "Code '" . $discountCodeValue . "' is not currently active.";
+    }
   }
 }
 

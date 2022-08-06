@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $('.apply-discount-code').on('click', function(e) {
+  $('.apply-discount-code').on('submit', function(e) {
     e.preventDefault();
     const discountCodeValue = $('#discount-code-input').val();
     if (!discountCodeValue.length) {

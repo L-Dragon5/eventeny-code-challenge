@@ -14,7 +14,7 @@
 
 ### Functionality I'd like to add with it:
 * Start time and expiration date for discount code
-* Number of uses for discount code
+* ~~Number of uses for discount code~~
 
 Decided to have the admin side use AJAX and have the cart not.
 Just to showcase that I can do both.

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * DiscountCode class.
  * 
@@ -76,7 +75,43 @@ class DiscountCode
      * @return bool     Whether added successfully
      */
     public static function add(Database $db, $dc) {
-        //TODO
+        $sql = 'INSERT INTO discount_code (name, type, amount, start_date, end_date, num_uses) VALUES (?,?,?,?,?,?)';
+        $stmt = $db->conn()->prepare($sql);
+
+        // Prevent percents over 100%.
+        // Prevent numbers below 0.
+        if ($dc['type'] === 'P' && $dc['amount'] > 100.00) {
+            $dc['amount'] = 100.00;
+        } else if ($dc['amount'] < 0) {
+            $dc['amount'] = 0.00;
+        }
+
+        // Date formatting.
+        if (!empty($dc['start_date'])) {
+            $startDate = new DateTime($dc['start_date']);
+            $dc['start_date'] = $startDate->format('Y-m-d H:i:s');
+        } else {
+            $startDate = new DateTime();
+            $dc['start_date'] = $startDate->format('Y-m-d H:i:s');
+        }
+
+        if (!empty($dc['end_date'])) {
+            $endDate = new DateTime($dc['end_date']);
+            $dc['end_date'] = $endDate->format('Y-m-d H:i:s');
+        } else {
+            $dc['end_date'] = NULL;
+        }
+
+        $result = $stmt->execute([
+            $dc['name'],
+            $dc['type'],
+            $dc['amount'],
+            $dc['start_date'],
+            $dc['end_date'],
+            $dc['num_uses'],
+        ]);
+        
+        return $result;
     }
 
     /**
@@ -89,7 +124,44 @@ class DiscountCode
      * @return bool     Whether updated successfully
      */
     public static function edit(Database $db, $id, $dc) {
-        //TODO
+        $sql = 'UPDATE discount_code SET name=:name, type=:type, amount=:amount, start_date=:startDate, end_date=:endDate, num_uses=:numUses WHERE id=:id';
+        $stmt = $db->conn()->prepare($sql);
+
+        // Prevent percents over 100%.
+        // Prevent numbers below 0.
+        if ($dc['type'] === 'P' && $dc['amount'] > 100.00) {
+            $dc['amount'] = 100.00;
+        } else if ($dc['amount'] < 0) {
+            $dc['amount'] = 0.00;
+        }
+
+        // Date formatting.
+        if (!empty($dc['start_date'])) {
+            $startDate = new DateTime($dc['start_date']);
+            $dc['start_date'] = $startDate->format('Y-m-d H:i:s');
+        } else {
+            $startDate = new DateTime();
+            $dc['start_date'] = $startDate->format('Y-m-d H:i:s');
+        }
+
+        if (!empty($dc['end_date'])) {
+            $endDate = new DateTime($dc['end_date']);
+            $dc['end_date'] = $endDate->format('Y-m-d H:i:s');
+        } else {
+            $dc['end_date'] = NULL;
+        }
+
+        $result = $stmt->execute([
+            'name' => $dc['name'],
+            'type' => $dc['type'],
+            'amount' => $dc['amount'],
+            'startDate' => $dc['start_date'],
+            'endDate' => $dc['end_date'],
+            'numUses' => $dc['num_uses'],
+            'id' => $id,
+        ]);
+        
+        return $result;
     }
 
     /**
@@ -107,5 +179,65 @@ class DiscountCode
         $result = $stmt->execute([$id]);
         
         return $result;
+    }
+
+    /**
+     * Check if discount code is within date active.
+     * 
+     * @param Database  $db     Database object
+     * @param int       $id     id of discount code
+     * 
+     * @return bool     Whether used successfully
+     */
+    public static function checkDate(Database $db, $id) {
+        $sql = 'SELECT start_date, end_date FROM discount_code WHERE id=?';
+        $stmt = $db->conn()->prepare($sql);
+        $stmt->execute([$id]);
+        $result = $stmt->fetch();
+        $startDate = $result['start_date'];
+        $endDate = $result['end_date'];
+
+        if (empty($endDate)) {
+            return true;
+        } else {
+            $startDate = new DateTime($startDate);
+            $endDate = new DateTime($endDate);
+            $curTime = new DateTime();
+            
+            if ($curTime->getTimestamp() > $startDate->getTimestamp() && $curTime->getTimestamp() <= $endDate->getTimestamp()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Use one use of the discount code.
+     * 
+     * @param Database  $db     Database object
+     * @param int       $id     id of discount code
+     * 
+     * @return bool     Whether used successfully
+     */
+    public static function useOne(Database $db, $id) {
+        $sql = 'SELECT num_uses FROM discount_code WHERE id=?';
+        $stmt = $db->conn()->prepare($sql);
+        $stmt->execute([$id]);
+        $result = $stmt->fetch();
+        $uses = $result['num_uses'];
+
+        if ($uses === -1) {
+            return true;
+        } else if ($uses !== -1 && $uses > 0) {
+            $sql = 'UPDATE discount_code SET num_uses=? WHERE id=?';
+            $stmt = $db->conn()->prepare($sql);
+            $result = $stmt->execute([($uses - 1), $id]);
+            return $result;
+        } else if ($uses === 0) {
+            return false;
+        }
+
+        return false;
     }
 }
