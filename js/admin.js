@@ -27,7 +27,10 @@ $(document).ready(function() {
           },
           url: 'php/DiscountCodeHandler.php',
           success: function(data) {
-            console.log(data);
+            if (data) {
+              closeModal();
+              getDiscountCodes();
+            }
           }
         });
       });
@@ -37,10 +40,30 @@ $(document).ready(function() {
     $('.action.edit').on('click', function(e) {
       e.preventDefault();
       const id = $(this).data('id');
-      const discountCode = {id: id};
-  
-      // Open modal.
-      openModal();
+      const discountCode = {};
+
+      // Get data and put into form defaults.
+      $.ajax({
+        type: 'POST',
+        data: {
+          action: 'GET',
+          id: id,
+        },
+        url: 'php/DiscountCodeHandler.php',
+        success: function(data) {
+          if (data) {
+            const dc = JSON.parse(data);
+
+            $('#admin-discount-code-form #name').val(dc.name);
+            $('#admin-discount-code-form #type').val(dc.type);
+            $('#admin-discount-code-form #amount').val(dc.amount);
+            $('#admin-discount-code-form #uses').val(dc.num_uses);
+            $('#admin-discount-code-form #start-date').val(dc.start_date);
+            $('#admin-discount-code-form #end-date').val(dc.end_date);
+            openModal();
+          }
+        }
+      });
 
       // Set handler for form submission.
       $('#admin-discount-code-form').unbind('submit');
@@ -59,7 +82,10 @@ $(document).ready(function() {
           },
           url: 'php/DiscountCodeHandler.php',
           success: function(data) {
-            console.log(data);
+            if (data) {
+              closeModal();
+              getDiscountCodes();
+            }
           }
         });
       });
@@ -70,19 +96,21 @@ $(document).ready(function() {
       e.preventDefault();
       const id = $(this).data('id');
   
-      $.ajax({
-        type: 'POST',
-        data: {
-          action: 'REMOVE',
-          id: id,
-        },
-        url: 'php/DiscountCodeHandler.php',
-        success: function(data) {
-          if (data) {
-            getDiscountCodes();
+      if (confirm("Are you sure?")) {
+        $.ajax({
+          type: 'POST',
+          data: {
+            action: 'REMOVE',
+            id: id,
+          },
+          url: 'php/DiscountCodeHandler.php',
+          success: function(data) {
+            if (data) {
+              getDiscountCodes();
+            }
           }
-        }
-      });
+        });
+      }
     });
   
     // Close modal when clicking outside the modal contents.
