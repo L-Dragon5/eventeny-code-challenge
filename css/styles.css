@@ -12,6 +12,8 @@
   
   --button-bg-color: #59744d;
   --button-font-color: white;
+
+  --display-max-width: 1280px;
 }
 
 body {
@@ -39,7 +41,7 @@ header nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1280px;
+  max-width: var(--display-max-width);
   margin: 0 auto;
 }
 
@@ -62,7 +64,7 @@ header nav a:hover {
 main {
   padding: 16px;
   width: 100%;
-  max-width: 1280px;
+  max-width: var(--display-max-width);
   margin: 0 auto;
 }
 
@@ -72,6 +74,12 @@ footer {
   padding: 12px;
   background-color: var(--footer-bg-color);
   color: var(--footer-font-color);
+}
+
+footer span {
+  display: block;
+  max-width: var(--display-max-width);
+  margin: 0 auto;
 }
 
 .button {
@@ -85,21 +93,6 @@ footer {
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-}
-
-div.discount-code {
-  border: 1px solid #d5d5d5;
-  padding: 8px;
-  max-width: 300px;
-  float: right;
-}
-
-div.discount-code label {
-  font-weight: bold;
-}
-
-div.discount-code .button {
-  margin-top: 8px;
 }
 
 table {
@@ -178,4 +171,32 @@ tr:nth-child(even) td {
 
 .action.delete {
   background-color: red;
+}
+
+.discount-code-form {
+  border: 1px solid #d5d5d5;
+  padding: 8px;
+  max-width: 300px;
+  float: right;
+}
+
+.discount-code-form label {
+  font-weight: bold;
+}
+
+.discount-code-form .button {
+  margin-top: 8px;
+}
+
+.discount-code-error {
+  display: none;
+  background-color: rgba(255, 0, 0, 0.25);
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+.discount-code-success {
+  background-color: rgba(0, 255, 0, 0.25);
+  padding: 8px;
+  margin-bottom: 8px;
 }

@@ -2,14 +2,41 @@
 session_start();
 require_once('php/Database.php');
 require_once('php/Cart.php');
+require_once('php/DiscountCode.php');
 
+// Create database and cart objects for use and calculations.
+$dc = isset($_SESSION['discount-code']) ? unserialize($_SESSION['discount-code']) : null;
 $db = new Database();
-$cart = new Cart();
+$cart = new Cart(165.00, $dc);
+$success = false;
+$errors = false;
 
-if (!isset($_SESSION['cart_amount'])) {
-  $_SESSION['cart_amount'] = 165.00;
+if ($dc) {
+  $success = true;
+  $successMessage = "Code '" . $dc->name . "' has been applied.";
 }
-$cart->subtotal($_SESSION['cart_amount']);
+
+// If form is submitted with discount code.
+if (isset($_POST['discount-code'])) {
+  // Sanitize data coming in.
+  $discountCodeValue = htmlspecialchars($_POST['discount-code']);
+
+  // Find discount code object by the name value
+  $discountCode = DiscountCode::findByName($db, $discountCodeValue);
+
+  // If not found, throw error.
+  // If found, set it in cart for calculations and display.
+  if (empty($discountCode)) {
+    $errors = true;
+    $error = "Code '" . $discountCodeValue . "' does not exist.";
+  } else {
+    $success = true;
+    $successMessage = "Code '" . $discountCodeValue . "' has been applied.";
+    $_SESSION['discount-code'] = serialize($discountCode);
+
+    $cart->discount($discountCode);
+  }
+}
 
 ?>
 
@@ -24,6 +51,7 @@ $cart->subtotal($_SESSION['cart_amount']);
     <link rel="stylesheet" href="css/styles.css">
 
     <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     <script src="index.js" defer></script>
   </head>
   <body>
@@ -66,14 +94,14 @@ $cart->subtotal($_SESSION['cart_amount']);
 
       <table class="totals">
         <tbody>
-          <?php if (isset($cart->discount)): ?>
+          <?php if (null !== $cart->discount()): ?>
           <tr>
             <td>Subtotal</td>
             <td>&dollar;<?php echo number_format($cart->subtotal(), 2); ?></td>
           </tr>
           <tr>
             <td>Discount</td>
-            <td>&dollar;<?php echo number_format($cart->discount(), 2); ?></td>
+            <td style="color: green;">-&dollar;<?php echo number_format($cart->discountValue(), 2); ?></td>
           </tr>
           <?php endif; ?>
           <tr>
@@ -83,11 +111,21 @@ $cart->subtotal($_SESSION['cart_amount']);
         </tbody>
       </table>
 
-      <div class="discount-code">
+      <form class="discount-code-form" action="" method="post">
+        <?php if ($errors): ?>
+          <div class="discount-code-error" style="display: block;"><?php echo $error; ?></div>
+        <?php else: ?>
+          <div class="discount-code-error"></div>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+          <div class="discount-code-success"><?php echo $successMessage; ?></div>
+        <?php endif; ?>
+
         <label for="discount-code-input">Discount Code</label>
-        <input type="text" id="discount-code-input" />
-        <input type="submit" value="Apply Code" class="button" />
-      </div>
+        <input type="text" id="discount-code-input" name="discount-code" />
+        <input type="submit" value="Apply Code" class="button apply-discount-code" />
+      </form>
     </main>
 
     <footer>

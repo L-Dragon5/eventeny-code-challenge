@@ -17,6 +17,7 @@ $discountCodes = DiscountCode::all($db);
     <link rel="stylesheet" href="css/styles.css">
 
     <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     <script src="index.js" defer></script>
   </head>
   <body>
@@ -33,7 +34,7 @@ $discountCodes = DiscountCode::all($db);
 
     <main>
       <div class="actions">
-        <input type="submit" value="+ Add Discount Code" class="button" />
+        <input type="submit" value="+ Add Discount Code" class="button add-discount-code" />
       </div>
 
       <table class="admin">

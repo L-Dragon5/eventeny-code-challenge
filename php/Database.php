@@ -27,7 +27,7 @@ class Database
 
         // Set up tables.
         $this->setUpDiscountCodeTable();
-        // $this->seedDiscountCodeTable();
+        $this->seedDiscountCodeTable();
     }
 
     /**
@@ -70,7 +70,7 @@ class Database
             id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
             name VARCHAR(200) NOT NULL,
             type VARCHAR(1) NOT NULL DEFAULT 'P',
-            amount DECIMAL(7, 2) NOT NULL DEFAULT '0.00',
+            amount DECIMAL(6, 2) UNSIGNED NOT NULL DEFAULT '0.00',
             start_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             end_date TIMESTAMP,
             num_uses TINYINT NOT NULL DEFAULT -1,

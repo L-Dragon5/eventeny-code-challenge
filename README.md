@@ -10,7 +10,7 @@
 ### Minimum functionality:
 * Create a simple discount code
   * Ability for an admin to create, read, update, and delete a discount code
-  * Ability for a user to apply a discount to a shopping cart
+  * ~~Ability for a user to apply a discount to a shopping cart~~
 
 ### Functionality I'd like to add with it:
 * Start time and expiration date for discount code
