@@ -1,7 +1,7 @@
 $(document).ready(function() {
   $('.apply-discount-code').on('submit', function(e) {
     e.preventDefault();
-    const discountCodeValue = $('#discount-code-input').val();
+    const discountCodeValue = $('#discount-code-input').val().trim();
     if (!discountCodeValue.length) {
       $('.discount-code-error').text('Discount code field cannot be blank.');
       $('.discount-code-error').show();

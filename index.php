@@ -20,35 +20,41 @@ if ($dc) {
 if (isset($_POST['discount-code'])) {
   // Sanitize data coming in.
   $discountCodeValue = htmlspecialchars($_POST['discount-code']);
+  $discountCodeValue = trim($discountCodeValue);
 
-  // Find discount code object by the name value
-  $discountCode = DiscountCode::findByName($db, $discountCodeValue);
+  if (!empty($discountCodeValue)) {
+    // Find discount code object by the name value
+    $discountCode = DiscountCode::findByName($db, $discountCodeValue);
 
-  // If not found, throw error.
-  // If found, set it in cart for calculations and display.
-  if (empty($discountCode)) {
-    $errors = true;
-    $error = "Code '" . $discountCodeValue . "' does not exist.";
-  } else {
-    // If in valid datetime, then keep going.
-    // If not, then code is not in active use.
-    if (DiscountCode::checkDate($db, $discountCode->id)) {
-      // If can use one, then keep going.
-      // If not, then maximum number of uses are used.
-      if (DiscountCode::useOne($db, $discountCode->id)) {
-        $success = true;
-        $successMessage = "Code '" . $discountCodeValue . "' has been applied.";
-        $_SESSION['discount-code'] = serialize($discountCode);
-    
-        $cart->discount($discountCode);
+    // If not found, throw error.
+    // If found, set it in cart for calculations and display.
+    if (empty($discountCode)) {
+      $errors = true;
+      $error = "Code '" . $discountCodeValue . "' does not exist.";
+    } else {
+      // If in valid datetime, then keep going.
+      // If not, then code is not in active use.
+      if (DiscountCode::checkDate($db, $discountCode->id)) {
+        // If can use one, then keep going.
+        // If not, then maximum number of uses are used.
+        if (DiscountCode::useOne($db, $discountCode->id)) {
+          $success = true;
+          $successMessage = "Code '" . $discountCodeValue . "' has been applied.";
+          $_SESSION['discount-code'] = serialize($discountCode);
+      
+          $cart->discount($discountCode);
+        } else {
+          $errors = true;
+          $error = "Code '" . $discountCodeValue . "' has been fully used up.";
+        }
       } else {
         $errors = true;
-        $error = "Code '" . $discountCodeValue . "' has been fully used up.";
+        $error = "Code '" . $discountCodeValue . "' is not currently active.";
       }
-    } else {
-      $errors = true;
-      $error = "Code '" . $discountCodeValue . "' is not currently active.";
     }
+  } else {
+    $errors = true;
+    $error = "Code cannot be blank.";
   }
 }
 
