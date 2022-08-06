@@ -1,11 +1,3 @@
-<?php
-require_once('php/Database.php');
-require_once('php/DiscountCode.php');
-$db = new Database();
-
-$discountCodes = DiscountCode::all($db);
-?>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,7 +10,7 @@ $discountCodes = DiscountCode::all($db);
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
-    <script src="index.js" defer></script>
+    <script src="admin.js" defer></script>
   </head>
   <body>
     <header class="admin">
@@ -49,28 +41,7 @@ $discountCodes = DiscountCode::all($db);
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <?php if (empty($discountCodes)): ?>
-          <tr>
-            <td colspan="7" style="text-align: center;">No discount codes found.</td>
-          </tr>
-          <?php else: ?>
-            <?php foreach ($discountCodes as $code): ?>
-              <tr>
-                <td><?php echo $code->name; ?></td>
-                <td><?php echo ($code->type === 'P' ? 'Percentage' : 'Fixed Amount'); ?></td>
-                <td><?php echo $code->amount; ?></td>
-                <td><?php echo $code->start_date; ?></td>
-                <td><?php echo $code->end_date; ?></td>
-                <td><?php echo $code->num_uses; ?></td>
-                <td>
-                  <span class="button action edit" data-id="<?php echo $code->id; ?>">Edit</span>
-                  <span class="button action delete" data-id="<?php echo $code->id; ?>">Delete</span>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          <?php endif; ?>
-        </tbody>
+        <tbody></tbody>
       </table>
     </main>
 

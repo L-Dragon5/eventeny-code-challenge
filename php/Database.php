@@ -27,7 +27,7 @@ class Database
 
         // Set up tables.
         $this->setUpDiscountCodeTable();
-        $this->seedDiscountCodeTable();
+        // $this->seedDiscountCodeTable();
     }
 
     /**

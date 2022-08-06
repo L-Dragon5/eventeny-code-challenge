@@ -26,7 +26,7 @@ class DiscountCode
      * @return array    array of DiscountCode objects of all rows in database.
      */
     public static function all(Database $db) {
-        $sql = 'SELECT * FROM discount_code';
+        $sql = 'SELECT * FROM discount_code WHERE status=1';
         $stmt = $db->conn()->query($sql);
         return $stmt->fetchAll(PDO::FETCH_CLASS, 'DiscountCode');
     }
@@ -65,5 +65,22 @@ class DiscountCode
         $result = $stmt->fetch();
 
         return !empty($result) ? $result : false;
+    }
+
+    /**
+     * Remove discount code based on id.
+     * Sets status to 0.
+     * 
+     * @param Database  $db     Database object
+     * @param int       $id     id of discount code
+     * 
+     * @return bool     Whether deleted successfully
+     */
+    public static function remove(Database $db, $id) {
+        $sql = 'UPDATE discount_code SET status=0 WHERE id=?';
+        $stmt = $db->conn()->prepare($sql);
+        $result = $stmt->execute([$id]);
+        
+        return $result;
     }
 }

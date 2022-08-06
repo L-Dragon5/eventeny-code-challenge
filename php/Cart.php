@@ -73,13 +73,10 @@ class Cart
 
     private function calculate() {
         // Get values based on discount type.
-        switch ($this->discount->type) {
-            case 'P':
-                $this->discountValue = ($this->discount->amount / 100) * $this->subtotal;
-                break;
-            case 'F':
-                $this->discountValue = $this->discount->amount;
-                break;
+        if ($this->discount->type === 'P') {
+            $this->discountValue = ($this->discount->amount / 100) * $this->subtotal;
+        } else if ($this->discount->type === 'F') {
+            $this->discountValue = $this->discount->amount;
         }
     }
 }
